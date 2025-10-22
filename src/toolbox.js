@@ -1,8 +1,8 @@
 export const toolbox = {
   'kind': 'flyoutToolbox',
   'contents': [
-    { 'kind': 'block', 'type': 'object' },
-    { 'kind': 'block', 'type': 'member' },
+    // { 'kind': 'block', 'type': 'object' },
+    // { 'kind': 'block', 'type': 'member' },
     { 'kind': 'block', 'type': 'math_number' },
     { 'kind': 'block', 'type': 'text' },
     { 'kind': 'block', 'type': 'logic_boolean' },

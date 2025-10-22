@@ -1,0 +1,10 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f8f8f8;
+}
+
+#output {
+  border-left: 2px solid #ccc;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
