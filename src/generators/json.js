@@ -1,18 +1,17 @@
-import * as Blockly from 'blockly';
-import 'blockly/blocks'; 
+import * as Blockly from 'blockly/core';
+import 'blockly/blocks.js'; 
 
 export const jsonGenerator = new Blockly.Generator('JSON');
 
 jsonGenerator.INDENT = jsonGenerator.INDENT || '  ';
 const Order = { ATOMIC: 0 };
 
-// Helper: garante que valueToCode devolva um código ou 'null'
+// ----------------- Helpers -----------------
 function valueOrNull(gen, block, name) {
   const code = gen.valueToCode(block, name, Order.ATOMIC);
   return (code && code !== '') ? code : 'null';
 }
 
-// Helper: extrai string quando blockToCode pode retornar array ou string
 function normalizeBlockToCode(gen, block) {
   const res = gen.blockToCode(block);
   if (Array.isArray(res)) return res[0];
@@ -20,31 +19,29 @@ function normalizeBlockToCode(gen, block) {
 }
 
 // ----------------- Value blocks -----------------
-jsonGenerator.forBlock['logic_null'] = function(block) {
+jsonGenerator['logic_null'] = function(block) {
   return ['null', Order.ATOMIC];
 };
 
-jsonGenerator.forBlock['text'] = function(block) {
+jsonGenerator['text'] = function(block) {
   const textValue = block.getFieldValue('TEXT') || '';
-  // escape quotes simples/triviais
   const escaped = textValue.replace(/"/g, '\\"');
   return [`"${escaped}"`, Order.ATOMIC];
 };
 
-jsonGenerator.forBlock['math_number'] = function(block) {
+jsonGenerator['math_number'] = function(block) {
   const code = String(block.getFieldValue('NUM') || '0');
   return [code, Order.ATOMIC];
 };
 
-jsonGenerator.forBlock['logic_boolean'] = function(block) {
+jsonGenerator['logic_boolean'] = function(block) {
   const code = (block.getFieldValue('BOOL') === 'TRUE') ? 'true' : 'false';
   return [code, Order.ATOMIC];
 };
 
-// ----------------- Array (lists_create_with) -----------------
-jsonGenerator['list_create_with'] = function(block) {
+// ----------------- Array -----------------
+jsonGenerator['lists_create_with'] = function(block) {
   const generator = jsonGenerator;
-
   const count = (typeof block.itemCount_ === 'number') ? block.itemCount_ : 0;
   const values = [];
   for (let i = 0; i < count; i++) {
@@ -53,15 +50,13 @@ jsonGenerator['list_create_with'] = function(block) {
   }
   if (values.length === 0) return ['[]', Order.ATOMIC];
 
-  // join com vírgula e nova linha, indentado
   const joined = values.join(',\n');
   const indented = generator.prefixLines(joined, generator.INDENT);
   const code = '[\n' + indented + '\n]';
   return [code, Order.ATOMIC];
 };
 
-// ----------------- Member (statement inside object) -----------------
-// Retorna string indentada (não um par [code, order]) — é usado como statement
+// ----------------- Member -----------------
 jsonGenerator['member'] = function(block) {
   const generator = jsonGenerator;
   const name = block.getFieldValue('MEMBER_NAME') || '';
@@ -70,7 +65,7 @@ jsonGenerator['member'] = function(block) {
   return generator.prefixLines(line, generator.INDENT);
 };
 
-// ----------------- Object (value) -----------------
+// ----------------- Object -----------------
 jsonGenerator['object'] = function(block) {
   const generator = jsonGenerator;
   const members = generator.statementToCode(block, 'MEMBERS') || '';
@@ -78,16 +73,16 @@ jsonGenerator['object'] = function(block) {
   return [code, Order.ATOMIC];
 };
 
-// ----------------- scrub_ (concatena bloco seguinte na pilha) -----------------
+// ----------------- scrub_  -----------------
 jsonGenerator.scrub_ = function(block, code, thisOnly) {
-  // blockToCode pode retornar array ou string — normalize
   const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
   if (nextBlock && !thisOnly) {
     const nextCode = normalizeBlockToCode(this, nextBlock);
     if (nextCode && nextCode.trim() !== '') {
-      // adiciona vírgula entre membros empilhados. Mantém que 'code' já está possivelmente indentado.
       return code + ',\n' + nextCode;
     }
   }
   return code;
 };
+
+export default jsonGenerator;
