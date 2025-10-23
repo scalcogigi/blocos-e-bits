@@ -3,7 +3,7 @@ import 'blockly/blocks.js';
 import './blocks/json.js';
 import './blocks/assembly_blocks.js';
 import { jsonGenerator } from './generators/json.js';
-// import { assemblyGenerator } from './generators/assembly.js';
+import { assemblyGenerator } from './generators/assembly.js'
 import { toolbox } from './toolbox.js';
 import { load, save } from './serialization.js';
 import './style/main.css';
