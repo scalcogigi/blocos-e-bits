@@ -8,6 +8,7 @@ import './blocks/core/reg.js';
 import './blocks/core/mem.js';
 import './blocks/core/im.js';
 import './blocks/index.js';
+import { reportError, clearErrors } from './utils/error.js';
 
 // create workspace
 const workspace = Blockly.inject(document.getElementById('blocklyDiv'), {
@@ -75,6 +76,19 @@ btnASM.addEventListener('click', () => {
   } catch (e) {
     output.textContent = 'Erro Assembly: ' + e.message;
     console.error(e);
+  }
+});
+
+// checking errors
+workspace.addChangeListener(() => {
+  clearErrors(workspace);
+
+  const blocks = workspace.getAllBlocks(false);
+  for (const block of blocks) {
+    if (typeof block.validate === "function") {
+      const error = block.validate(workspace, output);
+      if (error) break; 
+    }
   }
 });
 
