@@ -7,7 +7,7 @@ Blockly.Blocks['mem'] = {
       .appendField("(%A)");
     this.setOutput(true, "mem");
     this.setColour(200);
-    this.setTooltip("Acesso à memória no endereço armazenado em %A. A Z01 só permite (%A).");
+    this.setTooltip("Acesso à memória no endereço %A.");
   }
 };
 

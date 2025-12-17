@@ -3,6 +3,16 @@ export const toolbox = {
   'contents': [
     {
       'kind': 'category',
+      'name': 'Estrutura',
+      'colour': '#34495E',
+      'contents': [
+        { "kind": "block", "type": "program" },
+        { "kind": "block", "type": "start" },
+        { "kind": "block", "type": "comment" }
+      ]
+    },
+    {
+      'kind': 'category',
       'name': 'Operandos',
       'colour': '#8E44AD',
       'contents': [

@@ -14,7 +14,7 @@ Blockly.Blocks['im'] = {
       );
     this.setOutput(true, "im");
     this.setColour(160);
-    this.setTooltip("Valores imediatos permitidos pela ISA ($1, $0 e $-1).");
+    this.setTooltip("Imediatos válidos da arquitetura: $1, $0 e $-1");
   }
 };
 

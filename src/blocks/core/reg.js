@@ -13,7 +13,7 @@ Blockly.Blocks['reg'] = {
       );
     this.setOutput(true, "reg");
     this.setColour(180);
-    this.setTooltip("Registradores da arquitetura Z01 (%A ou %D).");
+    this.setTooltip("Registradores da arquitetura Z01: %A ou %D.");
   }
 };
 

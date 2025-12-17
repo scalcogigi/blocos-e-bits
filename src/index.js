@@ -1,12 +1,13 @@
 import * as Blockly from 'blockly';
 import 'blockly/blocks.js';
 import './blocks/json.js';
-import './blocks/assembly_blocks.js';
-import { jsonGenerator } from './generators/json.js';
-import { assemblyGenerator } from './generators/assembly.js'
-import { toolbox } from './toolbox.js';
+import { toolbox } from './toolbox/toolbox.js';
 import { load, save } from './serialization.js';
 import './style/main.css';
+import './blocks/core/reg.js';
+import './blocks/core/mem.js';
+import './blocks/core/im.js';
+import './blocks/index.js';
 
 // create workspace
 const workspace = Blockly.inject(document.getElementById('blocklyDiv'), {
