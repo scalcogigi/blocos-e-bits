@@ -1,5 +1,5 @@
 import * as Blockly from 'blockly/core';
-import 'blockly/blocks.js'; 
+import { reportError } from "../utils/error.js";
 
 export const jsonGenerator = new Blockly.Generator('JSON');
 

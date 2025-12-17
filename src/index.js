@@ -1,6 +1,10 @@
 import * as Blockly from 'blockly';
 import 'blockly/blocks.js';
 import './blocks/json.js';
+import { reportError, clearErrors } from './utils/error.js';
+import { assemblyGenerator } from './generators/assembly.js';
+import { jsonGenerator } from './generators/json.js';
+import { addValidationListener } from './utils/validationListener.js';
 import { toolbox } from './toolbox/toolbox.js';
 import { load, save } from './serialization.js';
 import './style/main.css';
@@ -8,7 +12,6 @@ import './blocks/core/reg.js';
 import './blocks/core/mem.js';
 import './blocks/core/im.js';
 import './blocks/index.js';
-import { reportError, clearErrors } from './utils/error.js';
 
 // create workspace
 const workspace = Blockly.inject(document.getElementById('blocklyDiv'), {
@@ -21,6 +24,7 @@ const workspace = Blockly.inject(document.getElementById('blocklyDiv'), {
 
 // Load saved workspace (if any)
 load(workspace);
+addValidationListener(workspace);
 
 // a run button and code output panel
 const controls = document.createElement('div');
