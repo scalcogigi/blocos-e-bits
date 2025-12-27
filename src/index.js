@@ -3,8 +3,6 @@ import 'blockly/blocks';
 import 'blockly/msg/pt-br';
 
 import { reportError, clearErrors } from './utils/error.js';
-import assemblyGenerator from './generators/assembly.js';
-import jsonGenerator from './generators/json.js';
 
 import './style/main.css';
 import './blocks/core/reg.js';
@@ -40,6 +38,9 @@ import './blocks/control/jg.js';
 import './blocks/control/jge.js';
 import './blocks/control/jl.js';
 import './blocks/control/jle.js';
+
+import assemblyGenerator from './generators/assembly.js';
+import jsonGenerator from './generators/json.js';
 
 console.log("jsonGenerator:", jsonGenerator);
 console.log("assemblyGenerator:", assemblyGenerator);
@@ -84,6 +85,8 @@ controls.appendChild(btnASM);
 const output = document.createElement('pre');
 output.id = 'output';
 output.style.whiteSpace = 'pre-wrap';
+output.style.fontFamily = 'monospace';
+output.style.fontSize = '13px';
 output.style.height = '60vh';
 output.style.overflow = 'auto';
 output.style.marginTop = '8px';

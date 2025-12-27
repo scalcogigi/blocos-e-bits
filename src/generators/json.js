@@ -29,37 +29,40 @@ function instr(op, args) {
 }
 
 // terminais
-jsonGenerator["im"] = function(block) {
+jsonGenerator.forBlock["im"] = function(block) {
   return [block.getFieldValue("VALUE"), Order.ATOMIC];
 };
 
-jsonGenerator["mem"] = function(block) {
+jsonGenerator.forBlock["mem"] = function(block) {
   return ["(%A)", Order.ATOMIC];
 };
 
-jsonGenerator["reg_A"] = function() {
+jsonGenerator.forBlock["reg_A"] = function() {
   return ["%A", Order.ATOMIC];
 };
 
-jsonGenerator["reg_D"] = function() {
+jsonGenerator.forBlock["reg_D"] = function() {
   return ["%D", Order.ATOMIC];
 };
 
 
 
 // operações
-jsonGenerator["leaw"] = function (block) {
+jsonGenerator.forBlock["leaw"] = function (block) {
   const c = value(block, "CONST");
   return JSON.stringify(instr("leaw", [c, "%A"]));
 };
 
-jsonGenerator["movw"] = function (block) {
-  const src = value(block, "SRC");
-  const dest = value(block, "DEST");
-  return JSON.stringify(instr("movw", [src, dest]));
-};
+jsonGenerator.forBlock["movw_reg"] =
+jsonGenerator.forBlock["movw_mem"] =
+  function (block) {
+    const src = value(block, "SRC");
+    const dest = value(block, "DEST");
+    return JSON.stringify(instr("movw", [src, dest]));
+  };
 
-jsonGenerator["addw"] = function (block) {
+
+jsonGenerator.forBlock["addw"] = function (block) {
   return JSON.stringify(
     instr("addw", [
       value(block, "A"),
@@ -69,7 +72,7 @@ jsonGenerator["addw"] = function (block) {
   );
 };
 
-jsonGenerator["subw"] = function (block) {
+jsonGenerator.forBlock["subw"] = function (block) {
   return JSON.stringify(
     instr("subw", [
       value(block, "A"),
@@ -79,7 +82,7 @@ jsonGenerator["subw"] = function (block) {
   );
 };
 
-jsonGenerator["rsubw"] = function (block) {
+jsonGenerator.forBlock["rsubw"] = function (block) {
   return JSON.stringify(
     instr("rsubw", [
       value(block, "A"),
@@ -89,23 +92,23 @@ jsonGenerator["rsubw"] = function (block) {
   );
 };
 
-jsonGenerator["incw"] = function (block) {
+jsonGenerator.forBlock["incw"] = function (block) {
   return JSON.stringify(instr("incw", [value(block, "REG")]));
 };
 
-jsonGenerator["decw"] = function (block) {
+jsonGenerator.forBlock["decw"] = function (block) {
   return JSON.stringify(instr("decw", [value(block, "REG")]));
 };
 
-jsonGenerator["notw"] = function (block) {
+jsonGenerator.forBlock["notw"] = function (block) {
   return JSON.stringify(instr("notw", [value(block, "REG")]));
 };
 
-jsonGenerator["negw"] = function (block) {
+jsonGenerator.forBlock["negw"] = function (block) {
   return JSON.stringify(instr("negw", [value(block, "REG")]));
 };
 
-jsonGenerator["andw"] = function (block) {
+jsonGenerator.forBlock["andw"] = function (block) {
   return JSON.stringify(
     instr("andw", [
       value(block, "A"),
@@ -115,7 +118,7 @@ jsonGenerator["andw"] = function (block) {
   );
 };
 
-jsonGenerator["orw"] = function (block) {
+jsonGenerator.forBlock["orw"] = function (block) {
   return JSON.stringify(
     instr("orw", [
       value(block, "A"),
@@ -125,37 +128,37 @@ jsonGenerator["orw"] = function (block) {
   );
 };
 
-jsonGenerator["label"] = function (block) {
+jsonGenerator.forBlock["label"] = function (block) {
   const name = block.getFieldValue("NAME");
   return JSON.stringify(instr("label", [name]));
 };
 
 // jump
-jsonGenerator["jmp"] = function () {
+jsonGenerator.forBlock["jmp"] = function () {
   return JSON.stringify(instr("jmp", []));
 };
 
-jsonGenerator["je"] = function (block) {
+jsonGenerator.forBlock["je"] = function (block) {
   return JSON.stringify(instr("je", [value(block, "REG")]));
 };
 
-jsonGenerator["jne"] = function (block) {
+jsonGenerator.forBlock["jne"] = function (block) {
   return JSON.stringify(instr("jne", [value(block, "REG")]));
 };
 
-jsonGenerator["jg"] = function (block) {
+jsonGenerator.forBlock["jg"] = function (block) {
   return JSON.stringify(instr("jg", [value(block, "REG")]));
 };
 
-jsonGenerator["jge"] = function (block) {
+jsonGenerator.forBlock["jge"] = function (block) {
   return JSON.stringify(instr("jge", [value(block, "REG")]));
 };
 
-jsonGenerator["jl"] = function (block) {
+jsonGenerator.forBlock["jl"] = function (block) {
   return JSON.stringify(instr("jl", [value(block, "REG")]));
 };
 
-jsonGenerator["jle"] = function (block) {
+jsonGenerator.forBlock["jle"] = function (block) {
   return JSON.stringify(instr("jle", [value(block, "REG")]));
 };
 
@@ -166,7 +169,7 @@ jsonGenerator.workspaceToCode = function (workspace) {
 
   const exec = blocks.filter(
     (b) =>
-      typeof jsonGenerator[b.type] === "function" &&
+      typeof jsonGenerator.forBlock[b.type] === "function" &&
       !b.isInFlyout &&
       !b.isShadow() &&
       !["program", "start", "comment", "object", "member"].includes(b.type)
@@ -174,9 +177,11 @@ jsonGenerator.workspaceToCode = function (workspace) {
 
   exec.sort((a, b) => a.y - b.y);
 
-  const instructions = exec.map((b) =>
-    JSON.parse(jsonGenerator.blockToCode(b))
-  );
+  const instructions = exec
+  .map((b) => jsonGenerator.blockToCode(b))
+  .filter((code) => typeof code === "string")
+  .map((code) => JSON.parse(code));
+
 
   return JSON.stringify({ instructions }, null, 2);
 };

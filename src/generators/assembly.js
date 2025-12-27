@@ -61,87 +61,95 @@ function validateJumps(blocks, labels) {
 }
 
 // instruções
-assemblyGenerator['leaw'] = function (block) {
+assemblyGenerator.forBlock['leaw'] = function (block) {
   const c = value(block, 'CONST');
-  return `leaw ${c}, %A\n`;
+  return `leaw ${c}, %A`;
 };
 
-assemblyGenerator['movw_reg'] = assemblyGenerator['movw_mem'] = function(block) {
-  return `movw ${value(block,"SRC")}, ${value(block,"DEST")}\n`;
+assemblyGenerator.forBlock['movw_reg'] = assemblyGenerator.forBlock['movw_mem'] = function(block) {
+  return `movw ${value(block,"SRC")}, ${value(block,"DEST")}`;
 };
 
-assemblyGenerator['addw'] = function(block) {
-  return `addw ${value(block,"A")}, ${value(block,"B")}, ${value(block,"DEST")}\n`;
+assemblyGenerator.forBlock['addw'] = function(block) {
+  return `addw ${value(block,"A")}, ${value(block,"B")}, ${value(block,"DEST")}`;
 };
 
-assemblyGenerator["subw"] = function (block) {
-  return `subw ${value(block,"A")}, ${value(block,"B")}, ${value(block,"DEST")}\n`;
-
-};
-
-assemblyGenerator["rsubw"] = function (block) {
-  return `rsubw ${value(block,"A")}, ${value(block,"B")}, ${value(block,"DEST")}\n`;
+assemblyGenerator.forBlock["subw"] = function (block) {
+  return `subw ${value(block,"A")}, ${value(block,"B")}, ${value(block,"DEST")}`;
 
 };
 
-assemblyGenerator['incw'] = function(block) {
+assemblyGenerator.forBlock["rsubw"] = function (block) {
+  return `rsubw ${value(block,"A")}, ${value(block,"B")}, ${value(block,"DEST")}`;
+
+};
+
+assemblyGenerator.forBlock['incw'] = function(block) {
   const reg = value(block, 'REG');
-  return `incw ${reg}\n`;
+  return `incw ${reg}`;
 };
 
-assemblyGenerator["decw"] = function (block) {
+assemblyGenerator.forBlock["decw"] = function (block) {
   const r = value(block, "REG");
-  return `decw ${r}\n`;
+  return `decw ${r}`;
 };
 
-assemblyGenerator["notw"] = function (block) {
+assemblyGenerator.forBlock["notw"] = function (block) {
   const r = value(block, "REG");
-  return `notw ${r}\n`;
+  return `notw ${r}`;
 };
 
-assemblyGenerator["negw"] = function (block) {
+assemblyGenerator.forBlock["negw"] = function (block) {
   const r = value(block, "REG");
-  return `negw ${r}\n`;
+  return `negw ${r}`;
 };
 
-assemblyGenerator["andw"] = function (block) {
+assemblyGenerator.forBlock["andw"] = function (block) {
   const a = value(block, "A");
   const b = value(block, "B");
   const dest = value(block, "DEST");
 
-  return `andw ${a}, ${b}, ${dest}\n`;
+  return `andw ${a}, ${b}, ${dest}`;
 };
 
-assemblyGenerator["orw"] = function (block) {
+assemblyGenerator.forBlock["orw"] = function (block) {
   const a = value(block, "A");
   const b = value(block, "B");
   const dest = value(block, "DEST");
 
-  return `orw ${a}, ${b}, ${dest}\n`;
+  return `orw ${a}, ${b}, ${dest}`;
 };
 
-assemblyGenerator['label'] = function(block) {
+assemblyGenerator.forBlock['label'] = function(block) {
   const name = block.getFieldValue('NAME');
-  return `${name}:\n`;
+  return `${name}:`;
 };
 
 // jump labels
-assemblyGenerator["jmp"] = () => `jmp\n`;
-assemblyGenerator["je"] = (block) => `je ${value(block, "REG")}\n`;
-assemblyGenerator["jne"] = (block) => `jne ${value(block, "REG")}\n`;
-assemblyGenerator["jg"] = (block) => `jg ${value(block, "REG")}\n`;
-assemblyGenerator["jge"] = (block) => `jge ${value(block, "REG")}\n`;
-assemblyGenerator["jl"] = (block) => `jl ${value(block, "REG")}\n`;
-assemblyGenerator["jle"] = (block) => `jle ${value(block, "REG")}\n`;
+assemblyGenerator.forBlock["jmp"] = () => `jmp`;
+assemblyGenerator.forBlock["je"] = (block) => `je ${value(block, "REG")}`;
+assemblyGenerator.forBlock["jne"] = (block) => `jne ${value(block, "REG")}`;
+assemblyGenerator.forBlock["jg"] = (block) => `jg ${value(block, "REG")}`;
+assemblyGenerator.forBlock["jge"] = (block) => `jge ${value(block, "REG")}`;
+assemblyGenerator.forBlock["jl"] = (block) => `jl ${value(block, "REG")}`;
+assemblyGenerator.forBlock["jle"] = (block) => `jle ${value(block, "REG")}`;
 
 // terminais
-assemblyGenerator["im"] = function(block) {
+assemblyGenerator.forBlock["im"] = function(block) {
   const val = block.getFieldValue("VALUE");
   return [val, Order.ATOMIC];
 };
 
-assemblyGenerator["mem"] = function(block) {
+assemblyGenerator.forBlock["mem"] = function(block) {
   return ["(%A)", Order.ATOMIC];
+};
+
+assemblyGenerator.forBlock["reg_A"] = function() {
+  return ["%A", Order.ATOMIC];
+};
+
+assemblyGenerator.forBlock["reg_D"] = function() {
+  return ["%D", Order.ATOMIC];
 };
 
 
@@ -164,7 +172,7 @@ assemblyGenerator.workspaceToCode = function (workspace) {
   }
 
   const executable = blocks.filter(b =>
-    typeof assemblyGenerator[b.type] === "function" &&
+    typeof assemblyGenerator.forBlock[b.type] === "function" &&
     !b.isInFlyout &&
     !b.isShadow() &&
     b.type !== "program" &&
@@ -176,7 +184,14 @@ assemblyGenerator.workspaceToCode = function (workspace) {
 
   executable.sort((a, b) => a.y - b.y);
 
-  return executable.map(b => this.blockToCode(b)).join("");
+  return executable
+  .map(b => {
+  const code = this.blockToCode(b);
+  return typeof code === "string" ? code.trim() : "";
+})
+.filter(line => line.length > 0)
+.join("\n") + "\n";
+
 };
 
 
