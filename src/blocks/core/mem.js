@@ -1,5 +1,5 @@
 import * as Blockly from 'blockly/core';
-import { TYPES } from './types';
+import { TYPES } from './types.js';
 
 Blockly.Blocks['mem'] = {
   init: function () {
@@ -14,3 +14,4 @@ Blockly.Blocks['mem'] = {
 
 // Memory can only be accessed via %A, eliminating errors that are impossible in hardware
 // memorie %A
+

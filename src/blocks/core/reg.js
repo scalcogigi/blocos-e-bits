@@ -1,5 +1,5 @@
 import * as Blockly from 'blockly/core';
-import { TYPES } from './types';
+import { TYPES } from './types.js';
 
 Blockly.Blocks['reg_A'] = {
   init: function () {
@@ -32,3 +32,4 @@ Blockly.Blocks['reg_D'] = {
 
 // Prevents students from typing invalid registers and standardizes operators
 // registers %A, %D
+

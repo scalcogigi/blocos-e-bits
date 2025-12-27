@@ -4,7 +4,7 @@ import { TYPES } from "../core/types.js";
 Blockly.Blocks["orw"] = {
   init: function () {
     this.appendValueInput("A")
-      .setCheck(TYPES.ALU_SRC_REG, TYPES.ALU_SRC_MEM)
+      .setCheck([TYPES.ALU_SRC_REG, TYPES.ALU_SRC_MEM])
       .appendField("orw");
 
     this.appendValueInput("B")

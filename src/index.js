@@ -6,29 +6,40 @@ import { reportError, clearErrors } from './utils/error.js';
 import assemblyGenerator from './generators/assembly.js';
 import jsonGenerator from './generators/json.js';
 
-
-// register generators
-Blockly.registry.register(
-  Blockly.registry.Type.GENERATOR,
-  'JSON',
-  jsonGenerator
-);
-
-Blockly.registry.register(
-  Blockly.registry.Type.GENERATOR,
-  'Assembly',
-  assemblyGenerator
-);
-
 import './style/main.css';
 import './blocks/core/reg.js';
 import './blocks/core/mem.js';
 import './blocks/core/im.js';
-import './blocks/index.js';
 
 import { addValidationListener } from './utils/validationListener.js';
 import { toolbox } from './toolbox/toolbox.js';
 import { load, save } from './serialization.js';
+
+import './blocks/structure/program.js';
+import './blocks/structure/start.js';
+import './blocks/structure/comment.js';
+
+import './blocks/assembly/movw_reg.js';
+import './blocks/assembly/movw_mem.js';
+import './blocks/assembly/leaw.js';
+import './blocks/assembly/addw.js';
+import './blocks/assembly/subw.js';
+import './blocks/assembly/rsubw.js';
+import './blocks/assembly/incw.js';
+import './blocks/assembly/decw.js';
+import './blocks/assembly/notw.js';
+import './blocks/assembly/negw.js';
+import './blocks/assembly/andw.js';
+import './blocks/assembly/orw.js';
+
+import './blocks/control/label.js';
+import './blocks/control/jmp.js';
+import './blocks/control/je.js';
+import './blocks/control/jne.js';
+import './blocks/control/jg.js';
+import './blocks/control/jge.js';
+import './blocks/control/jl.js';
+import './blocks/control/jle.js';
 
 console.log("jsonGenerator:", jsonGenerator);
 console.log("assemblyGenerator:", assemblyGenerator);
@@ -42,7 +53,7 @@ const workspace = Blockly.inject(document.getElementById('blocklyDiv'), {
   zoom: { wheel: true, startScale: 1 }
 });
 
-// Load saved workspace (if any)
+// Load saved workspace
 load(workspace);
 addValidationListener(workspace);
 

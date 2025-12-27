@@ -1,5 +1,4 @@
 import * as Blockly from 'blockly/core';
-import { reportError } from "../utils/error.js";
 
 const jsonGenerator = new Blockly.Generator('JSON');
 const Order = { ATOMIC: 0 };
@@ -34,13 +33,18 @@ jsonGenerator["im"] = function(block) {
   return [block.getFieldValue("VALUE"), Order.ATOMIC];
 };
 
-jsonGenerator["reg"] = function(block) {
-  return [block.getFieldValue("VALUE"), Order.ATOMIC];
-};
-
 jsonGenerator["mem"] = function(block) {
   return ["(%A)", Order.ATOMIC];
 };
+
+jsonGenerator["reg_A"] = function() {
+  return ["%A", Order.ATOMIC];
+};
+
+jsonGenerator["reg_D"] = function() {
+  return ["%D", Order.ATOMIC];
+};
+
 
 
 // operações
@@ -178,3 +182,4 @@ jsonGenerator.workspaceToCode = function (workspace) {
 };
 
 export default jsonGenerator;
+

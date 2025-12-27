@@ -10,11 +10,6 @@ function value(block, name) {
   return assemblyGenerator.valueToCode(block, name, Order.ATOMIC) || null;
 }
 
-function getType(block, name) {
-  const target = block.getInputTargetBlock(name);
-  return target ? target.outputConnection.check_[0] : null;
-}
-
 // coletar blocos
 function flattenWorkspace(workspace) {
   const top = workspace.getTopBlocks(false);
@@ -52,6 +47,9 @@ function validateJumps(blocks, labels) {
     ) {
       const regBlock = block.getInputTargetBlock("REG");
       if (value(block, "REG") === null)
+      if (!block.getInputTargetBlock("REG")) {
+        return `Jump sem registrador em ${block.type}`;
+    }
       if (!regBlock) return `Jump sem registrador em ${block.type}`;
       continue;
     }
@@ -68,67 +66,22 @@ assemblyGenerator['leaw'] = function (block) {
   return `leaw ${c}, %A\n`;
 };
 
-assemblyGenerator['movw'] = function(block) {
-  const src = value(block, 'SRC');
-  const dest = value(block, 'DEST');
-
-  const srcType = getType(block, 'SRC');
-  const destType = getType(block, 'DEST');
-
-  if (srcType === 'mem' && destType === 'mem') {
-    reportError(block, 'movw não permite memória -> memória', assemblyGenerator.outputPanel);
-    throw new Error('Invalid movw');
-  }
-
-  return `movw ${src}, ${dest}\n`;
+assemblyGenerator['movw_reg'] = assemblyGenerator['movw_mem'] = function(block) {
+  return `movw ${value(block,"SRC")}, ${value(block,"DEST")}\n`;
 };
 
 assemblyGenerator['addw'] = function(block) {
-  const a = value(block, 'A');
-  const b = value(block, 'B');
-  const dest = value(block, 'DEST');
-
-  const aType = getType(block, 'A');
-  const bType = getType(block, 'B');
-
-  if (aType === 'mem' && bType === 'mem') {
-    reportError(block, 'addw não permite mem + mem', assemblyGenerator.outputPanel);
-    throw new Error('Invalid addw');
-  }
-
-  return `addw ${a}, ${b}, ${dest}\n`;
+  return `addw ${value(block,"A")}, ${value(block,"B")}, ${value(block,"DEST")}\n`;
 };
 
 assemblyGenerator["subw"] = function (block) {
-  const a = value(block, "A");
-  const b = value(block, "B");
-  const dest = value(block, "DEST");
+  return `subw ${value(block,"A")}, ${value(block,"B")}, ${value(block,"DEST")}\n`;
 
-  const aType = getType(block, "A");
-  const bType = getType(block, "B");
-
-  if (aType === "mem" && bType === "mem") {
-    reportError(block, "subw não permite mem - mem.", assemblyGenerator.outputPanel);
-    throw new Error("Invalid subw");
-  }
-
-  return `subw ${a}, ${b}, ${dest}\n`;
 };
 
 assemblyGenerator["rsubw"] = function (block) {
-  const a = value(block, "A");
-  const b = value(block, "B");
-  const dest = value(block, "DEST");
+  return `rsubw ${value(block,"A")}, ${value(block,"B")}, ${value(block,"DEST")}\n`;
 
-  const aType = getType(block, "A");
-  const bType = getType(block, "B");
-
-  if (aType === "mem" && bType === "mem") {
-    reportError(block, "rsubw não permite mem - mem.", assemblyGenerator.outputPanel);
-    throw new Error("Invalid rsubw");
-  }
-
-  return `rsubw ${a}, ${b}, ${dest}\n`;
 };
 
 assemblyGenerator['incw'] = function(block) {
@@ -183,11 +136,6 @@ assemblyGenerator["jle"] = (block) => `jle ${value(block, "REG")}\n`;
 
 // terminais
 assemblyGenerator["im"] = function(block) {
-  const val = block.getFieldValue("VALUE");
-  return [val, Order.ATOMIC];
-};
-
-assemblyGenerator["reg"] = function(block) {
   const val = block.getFieldValue("VALUE");
   return [val, Order.ATOMIC];
 };

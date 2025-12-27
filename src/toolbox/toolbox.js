@@ -6,9 +6,9 @@ export const toolbox = {
       'name': 'Estrutura',
       'colour': '#34495E',
       'contents': [
-        { "kind": "block", "type": "program" },
-        { "kind": "block", "type": "start" },
-        { "kind": "block", "type": "comment" }
+        { kind: "block", type: "program" },
+        { kind: "block", type: "start" },
+        { kind: "block", type: "comment" }
       ]
     },
     {
@@ -16,9 +16,10 @@ export const toolbox = {
       'name': 'Operandos',
       'colour': '#8E44AD',
       'contents': [
-        { 'kind': 'block', 'type': 'reg' },
-        { 'kind': 'block', 'type': 'mem' },
-        { 'kind': 'block', 'type': 'im' }
+		{ kind: "block", type: "reg_A" },
+		{ kind: "block", type: "reg_D" },
+		{ kind: 'block', type: 'mem' },
+		{ kind: 'block', type: 'im' }
       ]
     },
     {
@@ -26,7 +27,8 @@ export const toolbox = {
       'name': 'Instruções',
       'colour': '#2980B9',
       'contents': [
-        { kind: "block", type: "movw" },
+        { kind: "block", type: "movw_reg" },
+		{ kind: "block", type: "movw_mem" },
         { kind: "block", type: "leaw" },
         { kind: "block", type: "addw" },
         { kind: "block", type: "subw" },

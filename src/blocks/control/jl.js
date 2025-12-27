@@ -1,8 +1,9 @@
 import * as Blockly from "blockly/core";
+import { TYPES } from "../core/types.js";
 
 Blockly.Blocks["jl"] = {
   init: function () {
-    this.appendValueInput("REG").setCheck(["reg"]).appendField("je");
+    this.appendValueInput("REG").setCheck([TYPES.REG]).appendField("jl");
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setColour(120);
