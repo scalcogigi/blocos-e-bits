@@ -1,68 +1,62 @@
-# Analisando o Uso de Programação Visual no Ensino de Assembly
+# Analyzing the Use of Visual Programming in Teaching Assembly
 
-O projeto tem como objetivo explorar o uso de programação visual baseada em blocos como ferramenta de apoio ao ensino da linguagem Assembly. A proposta busca compreender como a representação visual de instruções de baixo nível pode contribuir para o aprendizado de conceitos fundamentais da arquitetura de computadores, reduzindo a complexidade sintática e melhorando a acessibilidade do conteúdo.
+This project aims to explore the use of block-based visual programming as a supporting tool for teaching Assembly language. The proposal seeks to understand how the visual representation of low-level instructions can contribute to learning fundamental computer architecture concepts, reducing syntactic complexity and improving content accessibility.
 
-A aplicação desenvolvida integra o ambiente Blockly, uma biblioteca de código aberto para programação visual, com geradores personalizados de código Assembly e JSON. Dessa forma, é possível que o estudante construa programas arrastando blocos visuais, observando simultaneamente a tradução automática para código Assembly, o que incentiva a compreensão prática da lógica por trás das operações de máquina.
+The developed application integrates the Blockly environment—an open-source visual programming library—with custom Assembly and JSON code generators. This allows students to build programs by dragging and arranging visual blocks while simultaneously observing the automatic translation into Assembly code, encouraging a practical understanding of the logic behind machine-level operations.
 
----
+## Educational Objective
 
-## Objetivo Educacional
+The use of visual tools in Assembly education aims to make learning more intuitive and exploratory, promoting conceptual understanding of processes such as:
 
-A utilização de ferramentas visuais no ensino de Assembly visa tornar o aprendizado mais intuitivo e exploratório, promovendo a compreensão conceitual dos processos de:
+- Data movement between registers and memory;
+- Execution of arithmetic and logical operations;
+- Control flow mechanisms (conditional jumps and labels);
+- Symbolic representation of the machine’s internal architecture.
 
-- Movimentação de dados entre registradores e memória;
-- Execução de operações aritméticas e lógicas;
-- Controle de fluxo (saltos condicionais e labels);
-- Representação simbólica da arquitetura interna da máquina.
+Through this approach, the project seeks to bring students closer to the foundations of low-level programming, allowing the focus to shift from syntactic memorization to the logic and structure of instructions.
 
-Com isso, busca-se aproximar o estudante dos fundamentos da programação de baixo nível, permitindo que o foco recaia sobre a lógica e estrutura das instruções, em vez da memorização sintática.
+## Conclusion
 
----
-## Conclusão
+The project “Analyzing the Use of Visual Programming in Teaching Assembly” proposes an innovative and interactive approach to teaching concepts traditionally considered complex. By combining block-based visualization with automatic translation to Assembly, students can incrementally understand the correspondence between high-level logic and its representation in machine-level code.
 
-O projeto “Analisando o Uso de Programação Visual no Ensino de Assembly” propõe uma abordagem inovadora e interativa para o ensino de conceitos tradicionalmente considerados complexos.
-A partir da visualização de blocos e da tradução automática para Assembly, o estudante pode compreender, de maneira incremental, a correspondência entre a lógica de alto nível e sua representação em código de máquina.
+## Local Execution
 
----
-## Execução Local
+To run the project locally, Node.js and npm (Node Package Manager) must be installed on your system.
 
-Para executar o projeto localmente, é necessário possuir o Node.js e o npm (Node Package Manager) instalados em seu sistema.
-
-#### 2.1. Clonar o repositório
+### 2.1. Clone the repository
 ```bash
 git clone https://github.com/scalcogigi/blocos-e-bits.git
-cd blocos-e-bits.git
-
+cd blocos-e-bits
 ```
 
-#### 2.2. Instalar as dependências
-```
+### 2.2. Install dependencies
+```bash
 npm install
 ```
 
-#### 2.3. Executar o servidor de desenvolvimento
-```
+### 2.3. Run the development server
+```bash
 npm start
 ```
 
-O projeto será inicializado em modo de desenvolvimento e poderá ser acessado, por padrão, no endereço:
-
-```
+The project will start in development mode and can be accessed by default at:
+```bash
 http://localhost:3000/
 ```
 
----
-## Tecnologias Utilizadas
+## Technologies Used
+Blockly
 
-- Blockly
-- JavaScript
-- Node.js / npm
-- Webpack / Babel
-- HTML / CSS / Tailwind
+JavaScript
 
----
-## Licença
-Este projeto está licenciado sob os termos da Licença MIT.  
-É permitido o uso, modificação e redistribuição do código, desde que sejam mantidos os créditos originais da autora.
+Node.js / npm
+
+Webpack / Babel
+
+HTML / CSS / Tailwind
+
+License
+This project is licensed under the terms of the MIT License.
+Use, modification, and redistribution of the code are permitted, provided that the original author credits are maintained.
 
 Copyright (c) 2025 Giovanna Barros Scalco
