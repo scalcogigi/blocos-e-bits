@@ -1,88 +1,180 @@
 import * as Blockly from 'blockly/core';
 import { reportError } from "../utils/error.js";
 
-export const jsonGenerator = new Blockly.Generator('JSON');
-
-jsonGenerator.INDENT = jsonGenerator.INDENT || '  ';
+const jsonGenerator = new Blockly.Generator('JSON');
 const Order = { ATOMIC: 0 };
 
-// ----------------- Helpers -----------------
-function valueOrNull(gen, block, name) {
-  const code = gen.valueToCode(block, name, Order.ATOMIC);
-  return (code && code !== '') ? code : 'null';
+// auxiliares
+function value(block, name) {
+  const tuple = jsonGenerator.valueToCode(block, name, Order.ATOMIC);
+  if (!tuple) return null;
+  if (Array.isArray(tuple)) return tuple[0];
+  return tuple;
 }
 
-function normalizeBlockToCode(gen, block) {
-  const res = gen.blockToCode(block);
-  if (Array.isArray(res)) return res[0];
-  return res || '';
+function flattenWorkspace(workspace) {
+  const top = workspace.getTopBlocks(false);
+  const all = [];
+
+  function collect(block) {
+    all.push(block);
+    block.getChildren(false).forEach((child) => collect(child));
+  }
+
+  top.forEach((b) => collect(b));
+  return all;
 }
 
-// ----------------- Value blocks -----------------
-jsonGenerator['logic_null'] = function(block) {
-  return ['null', Order.ATOMIC];
+function instr(op, args) {
+  return { op, args };
+}
+
+// terminais
+jsonGenerator["im"] = function(block) {
+  return [block.getFieldValue("VALUE"), Order.ATOMIC];
 };
 
-jsonGenerator['text'] = function(block) {
-  const textValue = block.getFieldValue('TEXT') || '';
-  const escaped = textValue.replace(/"/g, '\\"');
-  return [`"${escaped}"`, Order.ATOMIC];
+jsonGenerator["reg"] = function(block) {
+  return [block.getFieldValue("VALUE"), Order.ATOMIC];
 };
 
-jsonGenerator['math_number'] = function(block) {
-  const code = String(block.getFieldValue('NUM') || '0');
-  return [code, Order.ATOMIC];
+jsonGenerator["mem"] = function(block) {
+  return ["(%A)", Order.ATOMIC];
 };
 
-jsonGenerator['logic_boolean'] = function(block) {
-  const code = (block.getFieldValue('BOOL') === 'TRUE') ? 'true' : 'false';
-  return [code, Order.ATOMIC];
+
+// operações
+jsonGenerator["leaw"] = function (block) {
+  const c = value(block, "CONST");
+  return JSON.stringify(instr("leaw", [c, "%A"]));
 };
 
-// ----------------- Array -----------------
-jsonGenerator['lists_create_with'] = function(block) {
-  const generator = jsonGenerator;
-  const count = (typeof block.itemCount_ === 'number') ? block.itemCount_ : 0;
-  const values = [];
-  for (let i = 0; i < count; i++) {
-    const v = valueOrNull(generator, block, 'ADD' + i);
-    values.push(v);
-  }
-  if (values.length === 0) return ['[]', Order.ATOMIC];
-
-  const joined = values.join(',\n');
-  const indented = generator.prefixLines(joined, generator.INDENT);
-  const code = '[\n' + indented + '\n]';
-  return [code, Order.ATOMIC];
+jsonGenerator["movw"] = function (block) {
+  const src = value(block, "SRC");
+  const dest = value(block, "DEST");
+  return JSON.stringify(instr("movw", [src, dest]));
 };
 
-// ----------------- Member -----------------
-jsonGenerator['member'] = function(block) {
-  const generator = jsonGenerator;
-  const name = block.getFieldValue('MEMBER_NAME') || '';
-  const valueCode = valueOrNull(generator, block, 'MEMBER_VALUE');
-  const line = `"${name}": ${valueCode}`;
-  return generator.prefixLines(line, generator.INDENT);
+jsonGenerator["addw"] = function (block) {
+  return JSON.stringify(
+    instr("addw", [
+      value(block, "A"),
+      value(block, "B"),
+      value(block, "DEST"),
+    ])
+  );
 };
 
-// ----------------- Object -----------------
-jsonGenerator['object'] = function(block) {
-  const generator = jsonGenerator;
-  const members = generator.statementToCode(block, 'MEMBERS') || '';
-  const code = '{\n' + members + '\n}';
-  return [code, Order.ATOMIC];
+jsonGenerator["subw"] = function (block) {
+  return JSON.stringify(
+    instr("subw", [
+      value(block, "A"),
+      value(block, "B"),
+      value(block, "DEST"),
+    ])
+  );
 };
 
-// ----------------- scrub_  -----------------
-jsonGenerator.scrub_ = function(block, code, thisOnly) {
-  const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
-  if (nextBlock && !thisOnly) {
-    const nextCode = normalizeBlockToCode(this, nextBlock);
-    if (nextCode && nextCode.trim() !== '') {
-      return code + ',\n' + nextCode;
-    }
-  }
-  return code;
+jsonGenerator["rsubw"] = function (block) {
+  return JSON.stringify(
+    instr("rsubw", [
+      value(block, "A"),
+      value(block, "B"),
+      value(block, "DEST"),
+    ])
+  );
+};
+
+jsonGenerator["incw"] = function (block) {
+  return JSON.stringify(instr("incw", [value(block, "REG")]));
+};
+
+jsonGenerator["decw"] = function (block) {
+  return JSON.stringify(instr("decw", [value(block, "REG")]));
+};
+
+jsonGenerator["notw"] = function (block) {
+  return JSON.stringify(instr("notw", [value(block, "REG")]));
+};
+
+jsonGenerator["negw"] = function (block) {
+  return JSON.stringify(instr("negw", [value(block, "REG")]));
+};
+
+jsonGenerator["andw"] = function (block) {
+  return JSON.stringify(
+    instr("andw", [
+      value(block, "A"),
+      value(block, "B"),
+      value(block, "DEST"),
+    ])
+  );
+};
+
+jsonGenerator["orw"] = function (block) {
+  return JSON.stringify(
+    instr("orw", [
+      value(block, "A"),
+      value(block, "B"),
+      value(block, "DEST"),
+    ])
+  );
+};
+
+jsonGenerator["label"] = function (block) {
+  const name = block.getFieldValue("NAME");
+  return JSON.stringify(instr("label", [name]));
+};
+
+// jump
+jsonGenerator["jmp"] = function () {
+  return JSON.stringify(instr("jmp", []));
+};
+
+jsonGenerator["je"] = function (block) {
+  return JSON.stringify(instr("je", [value(block, "REG")]));
+};
+
+jsonGenerator["jne"] = function (block) {
+  return JSON.stringify(instr("jne", [value(block, "REG")]));
+};
+
+jsonGenerator["jg"] = function (block) {
+  return JSON.stringify(instr("jg", [value(block, "REG")]));
+};
+
+jsonGenerator["jge"] = function (block) {
+  return JSON.stringify(instr("jge", [value(block, "REG")]));
+};
+
+jsonGenerator["jl"] = function (block) {
+  return JSON.stringify(instr("jl", [value(block, "REG")]));
+};
+
+jsonGenerator["jle"] = function (block) {
+  return JSON.stringify(instr("jle", [value(block, "REG")]));
+};
+
+
+// workspace
+jsonGenerator.workspaceToCode = function (workspace) {
+  const blocks = flattenWorkspace(workspace);
+
+  const exec = blocks.filter(
+    (b) =>
+      typeof jsonGenerator[b.type] === "function" &&
+      !b.isInFlyout &&
+      !b.isShadow() &&
+      !["program", "start", "comment", "object", "member"].includes(b.type)
+  );
+
+  exec.sort((a, b) => a.y - b.y);
+
+  const instructions = exec.map((b) =>
+    JSON.parse(jsonGenerator.blockToCode(b))
+  );
+
+  return JSON.stringify({ instructions }, null, 2);
 };
 
 export default jsonGenerator;

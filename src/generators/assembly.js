@@ -1,7 +1,7 @@
 import * as Blockly from 'blockly/core';
 import { reportError } from "../utils/error.js";
 
-export const assemblyGenerator = new Blockly.Generator('Assembly');
+const assemblyGenerator = new Blockly.Generator('Assembly');
 
 const Order = { ATOMIC: 0 };
 
@@ -218,7 +218,7 @@ assemblyGenerator.workspaceToCode = function (workspace) {
   const executable = blocks.filter(b =>
     typeof assemblyGenerator[b.type] === "function" &&
     !b.isInFlyout &&
-    !b.isShadow_ &&
+    !b.isShadow() &&
     b.type !== "program" &&
     b.type !== "start" &&
     b.type !== "comment" &&

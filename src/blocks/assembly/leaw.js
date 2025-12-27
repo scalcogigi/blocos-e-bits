@@ -1,10 +1,10 @@
 import * as Blockly from "blockly/core";
-import { reportError } from "../../utils/error.js";
+import { TYPES } from "../core/types.js";
 
 Blockly.Blocks["leaw"] = {
   init: function () {
     this.appendValueInput("CONST")
-      .setCheck(["im"])
+      .setCheck([TYPES.IMM])
       .appendField("leaw");
 
     this.appendDummyInput().appendField(", %A");

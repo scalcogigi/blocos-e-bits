@@ -1,17 +1,37 @@
-import * as Blockly from 'blockly';
-import 'blockly/blocks.js';
-import './blocks/json.js';
+import * as Blockly from 'blockly/core';
+import 'blockly/blocks';
+import 'blockly/msg/pt-br';
+
 import { reportError, clearErrors } from './utils/error.js';
-import { assemblyGenerator } from './generators/assembly.js';
-import { jsonGenerator } from './generators/json.js';
-import { addValidationListener } from './utils/validationListener.js';
-import { toolbox } from './toolbox/toolbox.js';
-import { load, save } from './serialization.js';
+import assemblyGenerator from './generators/assembly.js';
+import jsonGenerator from './generators/json.js';
+
+
+// register generators
+Blockly.registry.register(
+  Blockly.registry.Type.GENERATOR,
+  'JSON',
+  jsonGenerator
+);
+
+Blockly.registry.register(
+  Blockly.registry.Type.GENERATOR,
+  'Assembly',
+  assemblyGenerator
+);
+
 import './style/main.css';
 import './blocks/core/reg.js';
 import './blocks/core/mem.js';
 import './blocks/core/im.js';
 import './blocks/index.js';
+
+import { addValidationListener } from './utils/validationListener.js';
+import { toolbox } from './toolbox/toolbox.js';
+import { load, save } from './serialization.js';
+
+console.log("jsonGenerator:", jsonGenerator);
+console.log("assemblyGenerator:", assemblyGenerator);
 
 // create workspace
 const workspace = Blockly.inject(document.getElementById('blocklyDiv'), {

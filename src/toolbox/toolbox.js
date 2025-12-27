@@ -54,18 +54,5 @@ export const toolbox = {
         { kind: "block", type: "jle" },
       ]
     },
-    {
-      'kind': 'category',
-      'name': 'JSON',
-      'colour': '#B03A2E',
-      'contents': [
-        { 'kind': 'block', 'type': 'object' },
-        { 'kind': 'block', 'type': 'member' },
-        { 'kind': 'block', 'type': 'math_number' },
-        { 'kind': 'block', 'type': 'text' },
-        { 'kind': 'block', 'type': 'logic_boolean' },
-        { 'kind': 'block', 'type': 'logic_null' }
-      ]
-    }
   ]
 };

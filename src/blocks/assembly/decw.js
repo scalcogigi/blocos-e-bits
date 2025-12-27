@@ -1,10 +1,10 @@
 import * as Blockly from "blockly/core";
-import { reportError } from "../../utils/error.js";
+import { TYPES } from "../core/types.js";
 
 Blockly.Blocks["decw"] = {
   init: function () {
     this.appendValueInput("REG")
-      .setCheck(["reg"])
+      .setCheck([TYPES.REG_NO_A])
       .appendField("decw");
 
     this.setPreviousStatement(true);
@@ -12,18 +12,5 @@ Blockly.Blocks["decw"] = {
     this.setColour(200);
 
     this.setTooltip("DECW: decrementa o registrador em 1. Não aceita memória.");
-  },
-
-  validate: function (_, output) {
-    const reg = this.getInputTargetBlock("REG");
-    if (!reg) return;
-
-    const type = reg.outputConnection.check_[0];
-    if (type !== "reg") {
-      reportError(this, "decw só pode operar sobre registrador.", output);
-      return true;
-    }
-
-    return false;
   },
 };

@@ -1,18 +1,18 @@
 import * as Blockly from "blockly/core";
-import { reportError } from "../../utils/error.js";
+import { TYPES } from "../core/types.js";
 
 Blockly.Blocks["rsubw"] = {
   init: function () {
     this.appendValueInput("A")
-      .setCheck(["reg", "mem", "im"])
+      .setCheck(TYPES.ALU_SRC_REG, TYPES.ALU_SRC_MEM)
       .appendField("rsubw");
 
     this.appendValueInput("B")
-      .setCheck(["reg", "mem"])
+      .setCheck(TYPES.ALU_SRC_REG)
       .appendField(",");
 
     this.appendValueInput("DEST")
-      .setCheck(["reg", "mem"])
+      .setCheck(TYPES.ALU_DEST)
       .appendField(",");
 
     this.setPreviousStatement(true);
@@ -23,20 +23,4 @@ Blockly.Blocks["rsubw"] = {
     );
   },
 
-  validate: function (_, output) {
-    const a = this.getInputTargetBlock("A");
-    const b = this.getInputTargetBlock("B");
-
-    if (!a || !b) return;
-
-    const aType = a.outputConnection.check_[0];
-    const bType = b.outputConnection.check_[0];
-
-    if (aType === "mem" && bType === "mem") {
-      reportError(this, "rsubw não permite memória - memória.", output);
-      return true;
-    }
-
-    return false;
-  },
 };

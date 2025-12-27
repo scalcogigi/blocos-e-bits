@@ -1,10 +1,10 @@
 import * as Blockly from "blockly/core";
-import { reportError } from "../../utils/error.js";
+import { TYPES } from "../core/types.js";
 
 Blockly.Blocks["negw"] = {
   init: function () {
     this.appendValueInput("REG")
-      .setCheck(["reg"])
+      .setCheck(TYPES.REG)
       .appendField("negw");
 
     this.setPreviousStatement(true);
@@ -12,18 +12,5 @@ Blockly.Blocks["negw"] = {
     this.setColour(200);
 
     this.setTooltip("NEGW: aplica negação aritmética (valor → -valor).");
-  },
-
-  validate: function (_, output) {
-    const reg = this.getInputTargetBlock("REG");
-    if (!reg) return;
-
-    const type = reg.outputConnection.check_[0];
-    if (type !== "reg") {
-      reportError(this, "negw só funciona com registradores.", output);
-      return true;
-    }
-
-    return false;
   },
 };

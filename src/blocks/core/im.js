@@ -1,4 +1,5 @@
 import * as Blockly from 'blockly/core';
+import { TYPES } from "../core/types"
 
 Blockly.Blocks['im'] = {
   init: function () {
@@ -12,7 +13,7 @@ Blockly.Blocks['im'] = {
         ]),
         "VALUE"
       );
-    this.setOutput(true, "im");
+    this.setOutput(true, TYPES.IMM);
     this.setColour(160);
     this.setTooltip("Imediatos válidos da arquitetura: $1, $0 e $-1");
   }

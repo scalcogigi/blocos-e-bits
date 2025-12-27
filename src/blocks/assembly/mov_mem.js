@@ -1,22 +1,22 @@
 import * as Blockly from "blockly/core";
 import { TYPES } from "../core/types.js";
 
-Blockly.Blocks["addw"] = {
+Blockly.Blocks["movw_mem"] = {
   init: function () {
-    this.appendValueInput("A")
-      .setCheck([TYPES.ALU_SRC_REG, TYPES.ALU_SRC_MEM])
-      .appendField("addw");
-
-    this.appendValueInput("B")
-      .setCheck([TYPES.ALU_SRC_REG])
-      .appendField(",");
+    this.appendValueInput("SRC")
+      .setCheck([
+        TYPES.REG,
+        TYPES.IMM
+      ])
+      .appendField("movw");
 
     this.appendValueInput("DEST")
-      .setCheck([TYPES.ALU_DEST])
+      .setCheck(TYPES.MEM)
       .appendField(",");
 
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setColour(230);
+    this.setTooltip("Copia registrador ou imediato para memória.");
   },
 };
