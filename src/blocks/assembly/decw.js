@@ -9,7 +9,7 @@ Blockly.Blocks["decw"] = {
     
     this.appendValueInput("REG")
       .setCheck(typeCheck([TYPES.REG_DEST]))
-      .appendField("decw");
+      .appendField("decrementa");
 
     this.setPreviousStatement(true);
     this.setNextStatement(true);

@@ -9,7 +9,7 @@ Blockly.Blocks["movw"] = {
     
     this.appendValueInput("SRC1")
       .setCheck(typeCheck([TYPES.REG, TYPES.MEM]))
-      .appendField("movw");
+      .appendField("move");
 
     this.appendValueInput("SRC2")
       .setCheck(typeCheck([TYPES.REG, TYPES.MEM]))

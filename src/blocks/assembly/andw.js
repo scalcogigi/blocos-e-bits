@@ -9,7 +9,7 @@ Blockly.Blocks["andw"] = {
     
     this.appendValueInput("A")
       .setCheck(typeCheck([TYPES.REG, TYPES.MEM]))
-      .appendField("andw");
+      .appendField("E lógico");
 
     this.appendValueInput("B")
       .setCheck(typeCheck([TYPES.REG, TYPES.MEM]))

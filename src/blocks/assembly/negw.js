@@ -9,7 +9,7 @@ Blockly.Blocks["negw"] = {
     
     this.appendValueInput("REG")
       .setCheck(typeCheck([TYPES.REG_DEST]))
-      .appendField("negw");
+      .appendField("nega");
 
     this.setPreviousStatement(true);
     this.setNextStatement(true);

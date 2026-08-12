@@ -6,10 +6,10 @@ Blockly.Blocks["subw"] = {
   init: function () {
 
     this.setInputsInline(true);
-    
+     
     this.appendValueInput("A")
       .setCheck(typeCheck([TYPES.REG, TYPES.MEM]))
-      .appendField("subw");
+      .appendField("subtrai");
 
     this.appendValueInput("B")
       .setCheck(typeCheck([TYPES.REG, TYPES.MEM]))

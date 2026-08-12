@@ -9,7 +9,7 @@ Blockly.Blocks["incw"] = {
     
     this.appendValueInput("REG")
       .setCheck(typeCheck([TYPES.REG_DEST]))
-      .appendField("incw");
+      .appendField("incrementa");
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setColour(230);

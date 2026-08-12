@@ -9,7 +9,7 @@ Blockly.Blocks["notw"] = {
     
     this.appendValueInput("REG")
       .setCheck(typeCheck([TYPES.REG_DEST]))
-      .appendField("notw");
+      .appendField("inverte bits");
 
     this.setPreviousStatement(true);
     this.setNextStatement(true);

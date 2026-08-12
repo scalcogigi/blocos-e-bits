@@ -3,7 +3,7 @@ import Blockly from '../../blockly.js';
 Blockly.Blocks["label"] = {
   init: function () {
     this.appendDummyInput()
-      .appendField("label")
+      .appendField("rótulo")
       .appendField(new Blockly.FieldTextInput("LOOP"), "NAME");
 
     this.setPreviousStatement(true);

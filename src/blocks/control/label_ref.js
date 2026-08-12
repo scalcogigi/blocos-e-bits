@@ -4,7 +4,7 @@ import { TYPES } from "../core/types.js";
 Blockly.Blocks["label_ref"] = {
   init: function () {
     this.appendDummyInput()
-      .appendField("label")
+      .appendField("rótulo")
       .appendField(new Blockly.FieldTextInput("LOOP"), "NAME");
 
     this.setOutput(true, [TYPES.LABEL_REF]);

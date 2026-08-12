@@ -3,11 +3,11 @@ import { TYPES } from "../core/types.js";
 
 Blockly.Blocks["jg"] = {
   init: function () {
-    this.appendDummyInput().appendField("jg");
+    this.appendDummyInput().appendField("pula se maior que zero");
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setColour(120);
-    this.setTooltip("JNE: desvia para o endereço em %A se o registrador for maior que zero.");
+    this.setTooltip("JG: desvia para o endereço em %A se o registrador for maior que zero.");
   },
 };
 

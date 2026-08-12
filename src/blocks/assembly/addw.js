@@ -9,7 +9,7 @@ Blockly.Blocks["addw"] = {
 
     this.appendValueInput("A")
       .setCheck(typeCheck([TYPES.REG, TYPES.MEM]))
-      .appendField("addw");
+      .appendField("soma");
 
     this.appendValueInput("B")
       .setCheck(typeCheck([TYPES.REG, TYPES.MEM]))
@@ -22,5 +22,6 @@ Blockly.Blocks["addw"] = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setColour(230);
+    this.setTooltip("SOMA: calcula A + B e salva em DEST.");
   },
 };

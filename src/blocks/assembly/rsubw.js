@@ -9,7 +9,7 @@ Blockly.Blocks["rsubw"] = {
     
     this.appendValueInput("A")
       .setCheck(typeCheck([TYPES.REG, TYPES.MEM]))
-      .appendField("rsubw");
+      .appendField("subtrai reverso");
 
     this.appendValueInput("B")
       .setCheck(typeCheck([TYPES.REG, TYPES.MEM]))
